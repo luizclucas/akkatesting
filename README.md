@@ -12,7 +12,7 @@
 
 ### Prerequisites
 - Dotnetcore 3.0 => you can get it on: https://dotnet.microsoft.com/download
-- MysqlDatabase => if you want your personal one, and you'll need to create a table named Client(Id,Name,CPF,City)
+- MysqlDatabase => if you want your personal one, so you'll need to create a table named Client(Id,Name,CPF,City)
 
 
 ### Give examples
