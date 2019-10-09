@@ -1,58 +1,33 @@
 # Akka Testing
-It's a project to show how akka works and how better and easy it is to write correct concurrent and parallel systems. It's using a part of DDD too.
+- It's a project to show how akka works and how better and easy it is to write correct concurrent and parallel systems. It's using a part of DDD too.
+
+- It's a comparsing between using a simple thread to insert things on database(Considering a delay of 200ms for each "process" that need to be done) and using actor to do that, beggning with 2 actors and stop when it's bigger than 31, incrementing 5 per 5.
 
 ### Getting Started
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+- In class DataFactory there is an connection: _mysqlCn = "Server=remotemysql.com; port=3306; Uid=NgJ1KreqYM; Pwd=tS3PanMqA2; Database=NgJ1KreqYM; Connect Timeout=120;"; so if you want to use your own MySqlDatabase you'll need to change that connection and create a table:
+  Name: Client | Fields: Id(PK, char(36), Name(varchar(150)), CPF(varchar(20)), City(varchar(100)).
+  
+- As you don't need to change mysql connection, everything you need is to run AkkaTesting under 0 - Presentation Folder, you can run it both in Visual Studio or running on powershell these commands: 1. dotnet build 2. dotnet publish 3. dotnet run {dllname}
+
 
 ### Prerequisites
 - Dotnetcore 3.0 => you can get it on: https://dotnet.microsoft.com/download
 - MysqlDatabase => if you want your personal one, and you'll need to create a table named Client(Id,Name,CPF,City)
 
 
-Give examples
-Installing
-A step by step series of examples that tell you how to get a development env running
+### Give examples
+- On program, there's a Run, there's some variables listed bellow, that you can change the number of insert's that will be done.    
+      public static int _totalInsert = 50;
+      public static int _timesToRun = 5;
+      
+- On Luiz : ReceiveActor there's int _workerMax = 31, that is used to stop testing with more and more actors.
+- On Luiz: Receive<EndActor> there's a incriment of number of actors each time the code pass there.  
 
-Say what the step will be
 
-Give the example
-And repeat
+### Authors
+Luiz Claudio Dias Lucas - Initial work - [Luiz Lucas](https://github.com/luizclucas)
+### License
+You can use it as you wish.
 
-until finished
-End with an example of getting some data out of the system or using it for a little demo
-
-Running the tests
-Explain how to run the automated tests for this system
-
-Break down into end to end tests
-Explain what these tests test and why
-
-Give an example
-And coding style tests
-Explain what these tests test and why
-
-Give an example
-Deployment
-Add additional notes about how to deploy this on a live system
-
-Built With
-Dropwizard - The web framework used
-Maven - Dependency Management
-ROME - Used to generate RSS Feeds
-Contributing
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
-
-Versioning
-We use SemVer for versioning. For the versions available, see the tags on this repository.
-
-Authors
-Billie Thompson - Initial work - PurpleBooth
-See also the list of contributors who participated in this project.
-
-License
-This project is licensed under the MIT License - see the LICENSE.md file for details
-
-Acknowledgments
-Hat tip to anyone whose code was used
-Inspiration
-etc
+### Acknowledgments
+You can check the whole akka documentation at: https://getakka.net/index.html
