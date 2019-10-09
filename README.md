@@ -1,0 +1,2 @@
+# akkatesting
+Testing akka parallelism
