@@ -4,7 +4,7 @@
 - It's a comparsing between using a simple thread to insert things on database(Considering a delay of 200ms for each "process" that need to be done) and using actor to do that, beggning with 2 actors and stop when it's bigger than 31, incrementing 5 per 5.
 
 ### Getting Started
-- In class DataFactory there is an connection: _mysqlCn = "Server=remotemysql.com; port=3306; Uid=NgJ1KreqYM; Pwd=tS3PanMqA2; Database=NgJ1KreqYM; Connect Timeout=120;"; so if you want to use your own MySqlDatabase you'll need to change that connection and create a table:
+- In class DataFactory there is an connection: _mysqlCn, so if you want to use your own MySqlDatabase you'll need to change that connection and create a table:
   Name: Client | Fields: Id(PK, char(36), Name(varchar(150)), CPF(varchar(20)), City(varchar(100)).
   
 - As you don't need to change mysql connection, everything you need is to run AkkaTesting under 0 - Presentation Folder, you can run it both in Visual Studio or running on powershell these commands: 1. dotnet build 2. dotnet publish 3. dotnet run {dllname}
