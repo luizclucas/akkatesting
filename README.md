@@ -1,10 +1,10 @@
-Project Title
+# Akka Testing
 It's a project to show how akka works and how better and easy it is to write correct concurrent and parallel systems. It's using a part of DDD too.
 
-Getting Started
+### Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-Prerequisites
+### Prerequisites
 - Dotnetcore 3.0 => you can get it on: https://dotnet.microsoft.com/download
 - MysqlDatabase => if you want your personal one, and you'll need to create a table named Client(Id,Name,CPF,City)
 
