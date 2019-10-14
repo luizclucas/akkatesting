@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaTesting", "AkkaTesting\AkkaTesting.csproj", "{C7EAA37A-D0BF-40CF-A2F2-247F4E0ABE18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaTesting.Data", "AkkaTesting.Data\AkkaTesting.Data.csproj", "{8E6196DD-831E-4B51-90C6-323CB9A660A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaTesting.Data", "AkkaTesting.Data\AkkaTesting.Data.csproj", "{8E6196DD-831E-4B51-90C6-323CB9A660A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaTesting.Domain", "AkkaTesting.Domain\AkkaTesting.Domain.csproj", "{5D6CCE20-4E6C-46E1-B397-977EAE0D56FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaTesting.Domain", "AkkaTesting.Domain\AkkaTesting.Domain.csproj", "{5D6CCE20-4E6C-46E1-B397-977EAE0D56FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Presentation", "0 - Presentation", "{2C39F5A5-4843-47C3-A140-E4AFF66B7DD6}"
 EndProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Domain", "1 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Infra", "2 - Infra", "{3B098BC3-A2FD-4D81-B27A-617A519FA75B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkkaTesting.Infra.Helper", "AkkaTesting.Infra.Helper\AkkaTesting.Infra.Helper.csproj", "{AD8A9466-5154-4D04-A5E3-C21196A71DD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaTesting.Infra.Helper", "AkkaTesting.Infra.Helper\AkkaTesting.Infra.Helper.csproj", "{AD8A9466-5154-4D04-A5E3-C21196A71DD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

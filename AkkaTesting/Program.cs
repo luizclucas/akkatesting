@@ -12,6 +12,7 @@ using AkkaTesting.Infra.Helper;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using AkkaTesting.Actor;
 
 namespace AkkaTesting
 {
@@ -33,31 +34,43 @@ namespace AkkaTesting
         public static async Task Run()
         {
             var system = GetService<ActorSystem>();
-            var luiz = system.ActorOf(DIProps.Create<Luiz>(), "luiz");
-            var repository = GetService<IClientRepository>();
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            _log.Information("1 - Job Actor | 2 - Insert Actor");
 
-            for (int i = 0; i < _timesToRun; i++)
+            string whatIsGoingToDo = Console.ReadLine();
+
+            if(whatIsGoingToDo.Equals("1"))
             {
-                for (int j = 0; j < _totalInsert; j++)
-                {
-                    var client = new Client()
-                    {
-                        Id = Guid.NewGuid(),
-                        City = "BH" + i,
-                        CPF = "01" + i,
-                        Name = "Nome" + i
-                    };
-                    await Task.Delay(200);
-                    await repository.SaveAsync(client);
-                }
-
+                system.ActorOf(DIProps.Create<JobActor>());
             }
-            sw.Stop();
-            _log.Information("Tempo sem ator: {0}", sw.Elapsed);
-            luiz.Tell(new InitializeActor(2));
+            else
+            {
+                var luiz = system.ActorOf(DIProps.Create<Luiz>(), "luiz");
+                var repository = GetService<IClientRepository>();
+
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
+                for (int i = 0; i < _timesToRun; i++)
+                {
+                    for (int j = 0; j < _totalInsert; j++)
+                    {
+                        var client = new Client()
+                        {
+                            Id = Guid.NewGuid(),
+                            City = "BH" + i,
+                            CPF = "01" + i,
+                            Name = "Nome" + i
+                        };
+                        await Task.Delay(200);
+                        await repository.SaveAsync(client);
+                    }
+
+                }
+                sw.Stop();
+                _log.Information("Tempo sem ator: {0}", sw.Elapsed);
+                luiz.Tell(new InitializeActor(2));
+            }
         }
 
         #region [ ACTORS ]
