@@ -23,8 +23,9 @@ namespace AkkaTesting
         public static void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(ctx => ActorSystem.Create("app"));
+            services.AddSingleton<Actor1>();
             services.AddAllActorsFromAssemblyOf<Program>();
-            services.AddData();           
+            services.AddData();
         }
 
         public static int _totalInsert = 50;
@@ -35,42 +36,79 @@ namespace AkkaTesting
         {
             var system = GetService<ActorSystem>();
 
-            _log.Information("1 - Job Actor | 2 - Insert Actor");
+            _log.Information("0 - EXIT | 1 - Job Actor | 2 - Insert Actor | 3 - EventStream");
+            bool initialized3 = false;
+            IActorRef luiz = null, jobActor = null, actor1 = null;
 
-            string whatIsGoingToDo = Console.ReadLine();
-
-            if(whatIsGoingToDo.Equals("1"))
+            while (true)
             {
-                system.ActorOf(DIProps.Create<JobActor>());
-            }
-            else
-            {
-                var luiz = system.ActorOf(DIProps.Create<Luiz>(), "luiz");
-                var repository = GetService<IClientRepository>();
+                string whatIsGoingToDo = Console.ReadLine();
 
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-
-                for (int i = 0; i < _timesToRun; i++)
+                if (whatIsGoingToDo.Equals("0"))
                 {
-                    for (int j = 0; j < _totalInsert; j++)
+                    break;
+                }
+
+                if (whatIsGoingToDo.Equals("1"))
+                {
+                    if (jobActor == null)
                     {
-                        var client = new Client()
-                        {
-                            Id = Guid.NewGuid(),
-                            City = "BH" + i,
-                            CPF = "01" + i,
-                            Name = "Nome" + i
-                        };
-                        await Task.Delay(200);
-                        await repository.SaveAsync(client);
+                        jobActor = system.ActorOf(DIProps.Create<JobActor>());
+                    }
+                }
+                else if (whatIsGoingToDo.Equals("2"))
+                {
+
+                    if (luiz == null)
+                    {
+                        luiz = system.ActorOf(DIProps.Create<Luiz>(), "luiz");
                     }
 
+                    var repository = GetService<IClientRepository>();
+
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+
+                    for (int i = 0; i < _timesToRun; i++)
+                    {
+                        for (int j = 0; j < _totalInsert; j++)
+                        {
+                            var client = new Client()
+                            {
+                                Id = Guid.NewGuid(),
+                                City = "BH" + i,
+                                CPF = "01" + i,
+                                Name = "Nome" + i
+                            };
+                            await Task.Delay(200);
+                            await repository.SaveAsync(client);
+                        }
+
+                    }
+                    sw.Stop();
+                    _log.Information("Tempo sem ator: {0}", sw.Elapsed);
+                    luiz.Tell(new InitializeActor(2));
                 }
-                sw.Stop();
-                _log.Information("Tempo sem ator: {0}", sw.Elapsed);
-                luiz.Tell(new InitializeActor(2));
+                else if (whatIsGoingToDo.Equals("3"))
+                {
+                    if (actor1 == null)
+                    {
+                        actor1 = system.ActorOf(DIProps.Create<Actor1>(), "actor1");
+                        system.ActorOf(DIProps.Create<Actor2>(), "actor2");
+                        system.ActorOf(DIProps.Create<Actor3>(), "actor3");
+                        system.ActorOf(DIProps.Create<Actor4>(), "actor4");
+                        system.ActorOf(DIProps.Create<Actor5>(), "actor5");
+                        system.ActorOf(DIProps.Create<Actor6>(), "actor6");
+
+                        actor1.Tell(new InitializeActor());
+                    }
+                    else
+                    {
+                        actor1.Tell(new DoItAgain());
+                    }
+                }
             }
+
         }
 
         #region [ ACTORS ]
@@ -92,7 +130,7 @@ namespace AkkaTesting
 
                     for (int i = 0; i < _totalInsert * _timesToRun; i++)
                     {
-                        Mensagem msg = new Mensagem("MSG" + i.ToString());
+                        Message msg = new Message("MSG" + i.ToString());
 
                         msg.Client = new Client()
                         {
@@ -112,7 +150,7 @@ namespace AkkaTesting
                     _actorInserted = 0;
 
 
-                    if(_currentWorkers < _workerMax)
+                    if (_currentWorkers < _workerMax)
                     {
                         Self.Tell(new InitializeActor(_currentWorkers + 5));
                     }
@@ -124,13 +162,13 @@ namespace AkkaTesting
         {
             public Worker()
             {
-                ReceiveAsync<Mensagem>(async m =>
+                ReceiveAsync<Message>(async m =>
                 {
                     await ProccessMessage(m);
                 });
             }
 
-            public async Task ProccessMessage(Mensagem msg)
+            public async Task ProccessMessage(Message msg)
             {
                 var repository = GetService<IClientRepository>();
                 int tries = 0, success = 0;
@@ -169,7 +207,7 @@ namespace AkkaTesting
                 //    , success, tries, msg.Client.Name);
             }
 
-            private bool ImTheLast => Interlocked.Equals(_actorInserted, _totalInsert * _timesToRun);        
+            private bool ImTheLast => Interlocked.Equals(_actorInserted, _totalInsert * _timesToRun);
         }
         #endregion
     }

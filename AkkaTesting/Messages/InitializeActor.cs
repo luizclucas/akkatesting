@@ -2,6 +2,10 @@
 {
     public class InitializeActor
     {
+        public InitializeActor()
+        {
+
+        }
         public InitializeActor(int workerCounter)
         {
             WorkerCounter = workerCounter;
