@@ -37,7 +37,6 @@ namespace AkkaTesting
             var system = GetService<ActorSystem>();
 
             _log.Information("0 - EXIT | 1 - Job Actor | 2 - Insert Actor | 3 - EventStream");
-            bool initialized3 = false;
             IActorRef luiz = null, jobActor = null, actor1 = null;
 
             while (true)
@@ -68,6 +67,8 @@ namespace AkkaTesting
 
                     Stopwatch sw = new Stopwatch();
                     sw.Start();
+
+                    _log.Information("Começando a medir o tempo sem ator");
 
                     for (int i = 0; i < _timesToRun; i++)
                     {
