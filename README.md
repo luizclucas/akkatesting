@@ -1,10 +1,13 @@
 # Akka Testing
 - It's a project to show how akka works and how better and easy it is to write correct concurrent and parallel systems. It's using a part of DDD too.
 
-There's 3 modes that you can choose
- 1 - Job Actor (ReceiveActor) -> a job that runs each 10 seconds, it's to show how easy is to do a actor that schedule himself to run, without any other dll.
- 2 - Insert Actor (Using akka Router) ->  A comparsing between using a simple thread to insert things on database(Considering a delay of 200ms for each "process" that need to be done) and using actor to do that, beggning with 2 actors and stop when it's bigger than 31, incrementing 5 per 5.
- 3 - EventStream -> it shows the "broadcast" that in a actor system you can send a message broadcast and N actors can subscribe and process your message.
+- There's 3 modes that you can choose:
+
+ #### 1 - Job Actor (ReceiveActor) -> a job that runs each 10 seconds, it's to show how easy is to do a actor that schedule himself to run, without any other dll.
+ 
+#### 2 - Insert Actor (Using akka Router) ->  A comparsing between using a simple thread to insert things on database(Considering a delay of 200ms for each "process" that need to be done) and using actor to do that, beggning with 2 actors and stop when it's bigger than 31, incrementing 5 per 5.
+ 
+ #### 3 - EventStream -> it shows the "broadcast" that in a actor system you can send a message broadcast and N actors can subscribe and process your message.
 
 ### Getting Started
 - In class DataFactory there is an connection: _mysqlCn, so if you want to use your own MySqlDatabase you'll need to change that connection and create a table:
