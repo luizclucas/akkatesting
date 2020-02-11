@@ -11,7 +11,7 @@ namespace AkkaTesting.Data
         
         public DataFactory()
         {
-            _mysqlCn = "Server=remotemysql.com; port=3306; Uid=NgJ1KreqYM; Pwd=tS3PanMqA2; Database=NgJ1KreqYM; Connect Timeout=120;";
+            _mysqlCn = "Server=localhost; port=3306; Uid=root; Pwd=Carol146*; Database=IGDmDatabase; Connect Timeout=120;";
             _connection = CreateConnection();
             _connection.Open();
         }

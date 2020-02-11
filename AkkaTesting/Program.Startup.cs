@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AkkaTesting.Infra.Helper;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Sinks.Elasticsearch;
 
 namespace AkkaTesting
 {
@@ -13,10 +14,21 @@ namespace AkkaTesting
 
         public static async Task Main(string[] args)
         {
+            var indexPrefix = "akkatesting";
+
+            var options = new ElasticsearchSinkOptions(new[] { new Uri("http://localhost:9200") })
+            {
+                IndexDecider = (e, dt) =>
+                {
+                    return $"{indexPrefix}-{dt:yyyy.MM.dd}";
+                }
+            };
+
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.LiterateConsole()
-                .WriteTo.Seq("http://seqserver.sicluster:5341", compact: true)
-                .CreateLogger();
+            .WriteTo.LiterateConsole()
+            .WriteTo.Seq("http://localhost:5341", compact: true)
+            .WriteTo.Elasticsearch(options)
+            .CreateLogger();
 
             try
             {

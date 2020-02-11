@@ -28,8 +28,8 @@ namespace AkkaTesting
             services.AddData();
         }
 
-        public static int _totalInsert = 50;
-        public static int _timesToRun = 5;
+        public static int _totalInsert = 100;
+        public static int _timesToRun = 8;
         public static int _actorInserted;
 
         public static async Task Run()
@@ -63,32 +63,32 @@ namespace AkkaTesting
                         luiz = system.ActorOf(DIProps.Create<Luiz>(), "luiz");
                     }
 
-                    var repository = GetService<IClientRepository>();
+                    //var repository = GetService<IClientRepository>();
 
-                    Stopwatch sw = new Stopwatch();
-                    sw.Start();
+                    //Stopwatch sw = new Stopwatch();
+                    //sw.Start();
 
-                    _log.Information("Começando a medir o tempo sem ator");
+                    //_log.Information("Começando a medir o tempo sem ator");
 
-                    for (int i = 0; i < _timesToRun; i++)
-                    {
-                        for (int j = 0; j < _totalInsert; j++)
-                        {
-                            var client = new Client()
-                            {
-                                Id = Guid.NewGuid(),
-                                City = "BH" + i,
-                                CPF = "01" + i,
-                                Name = "Nome" + i
-                            };
-                            await Task.Delay(200);
-                            await repository.SaveAsync(client);
-                        }
+                    //for (int i = 0; i < _timesToRun; i++)
+                    //{
+                    //    for (int j = 0; j < _totalInsert; j++)
+                    //    {
+                    //        var client = new Client()
+                    //        {
+                    //            Id = Guid.NewGuid(),
+                    //            City = "BH" + i,
+                    //            CPF = "01" + i,
+                    //            Name = "Nome" + i
+                    //        };
+                    //        await Task.Delay(200);
+                    //        await repository.SaveAsync(client);
+                    //    }
 
-                    }
-                    sw.Stop();
-                    _log.Information("Tempo sem ator: {0}", sw.Elapsed);
-                    luiz.Tell(new InitializeActor(2));
+                    //}
+                    //sw.Stop();
+                    //_log.Information("Tempo sem ator: {0}", sw.Elapsed);
+                    luiz.Tell(new InitializeActor(8));
                 }
                 else if (whatIsGoingToDo.Equals("3"))
                 {
@@ -125,8 +125,8 @@ namespace AkkaTesting
                     _log.Information("[Luiz] - Inicializando");
                     sw.Restart();
 
-                    var workerProps = DIProps.Create<Worker>().WithRouter(new SmallestMailboxPool(m.WorkerCounter));
-                    _worker = Context.ActorOf(workerProps, "worker" + m.WorkerCounter);
+                    var props = new RoundRobinPool(m.WorkerCounter).Props(Props.Create<Worker>());
+                    _worker = Context.ActorOf(props, "worker" + m.WorkerCounter);
                     _currentWorkers = m.WorkerCounter;
 
                     for (int i = 0; i < _totalInsert * _timesToRun; i++)
@@ -151,37 +151,60 @@ namespace AkkaTesting
                     _actorInserted = 0;
 
 
-                    if (_currentWorkers < _workerMax)
-                    {
-                        Self.Tell(new InitializeActor(_currentWorkers + 5));
-                    }
+                    //if (_currentWorkers < _workerMax)
+                    //{
+                    //    Self.Tell(new InitializeActor(_currentWorkers + 5));
+                    //}
                 });
             }
         }
 
         public class Worker : ReceiveActor
         {
+            private readonly Guid _myId = Guid.NewGuid();
             public Worker()
             {
-                ReceiveAsync<Message>(async m =>
+                //ReceiveAsync<Message>(async m =>
+                //{
+                //    _log.Information("{0} Executando 10", _myId);
+                //    await ProccessMessage(m);
+                //    _log.Information("{0} Executado 10", _myId);
+
+                //});
+
+                Receive<Message>(m =>
                 {
-                    await ProccessMessage(m);
+
+                    var t = new Task<Message>(() =>
+                    {
+                        return m;
+                    });
+
+                    _log.Information("{0} Executando 15 | thread: {1}",_actorInserted,  t.Id);
+                    ProccessMessage(t).GetAwaiter().GetResult();
+                    _log.Information("{0} Executado 15 | thread: {1}", _actorInserted, t.Id);
+
+
                 });
+
             }
 
-            public async Task ProccessMessage(Message msg)
+
+            public async Task ProccessMessage(Task<Message> msg)
             {
-                var repository = GetService<IClientRepository>();
                 int tries = 0, success = 0;
+                var repository = GetService<IClientRepository>();
+
                 do
                 {
                     try
                     {
+                        _log.Information("Taskid Método : {0}", msg.Id);
                         await Task.Delay(200);
-
+                        var msgToSave = await msg;
+                        success = await repository.SaveAsync(msgToSave.Client);
                         ////Simulação de qualquer validação que vai ser feita antes de inserir no banco.
                         //await Task.Delay(RandomEx.Next(TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(1500)));
-                        success = await repository.SaveAsync(msg.Client);
 
                         if (success > 0)
                         {
